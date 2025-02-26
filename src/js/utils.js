@@ -10,7 +10,7 @@ export function createNewItem(value) {
 
   const deleteImg = document.createElement("img");
   deleteImg.classList.add("delete__item-btn");
-  deleteImg.src = "./svg/X.svg";
+  deleteImg.src = "svg/X.svg";
   deleteImg.alt = "Delete";
   newItem.appendChild(deleteImg);
 
