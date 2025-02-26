@@ -1,23 +1,26 @@
 {
-  "extends": "airbnb-base",
+  "plugins": ["prettier"],
+  "extends": ["airbnb-base", "plugin:prettier/recommended"],
   "env": {
-     "es6": true,
-     "browser": true,
-     "jest": true
+    "es6": true,
+    "browser": true,
+    "jest/globals": true
+  },
+  "parserOptions": {
+    "sourceType": "module"
   },
   "rules": {
-    "no-plusplus": "off",
-    "class-methods-use-this": "off",
-    "no-restricted-syntax": [
-      "error",
-      "LabeledStatement",
-      "WithStatement"
-    ],
-    "prettier/prettier": [
-      "error",
-        {
-         "endOfLine": "auto"
-        }
-    ] 
-  }
+    "no-unused-vars": "warn",
+    "prettier/prettier": ["error",
+      { "endOfLine": "auto" }
+    ]
+  },
+  "overrides": [
+    {
+      "files": ["**/*/*.test.js"],
+      "plugins": ["jest"],
+      "extends": ["plugin:jest/recommended"],
+      "rules": { "jest/prefer-expect-assertions": "off" }
+    }
+  ]
 }
