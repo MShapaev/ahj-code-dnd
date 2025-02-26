@@ -1,29 +1,29 @@
 /* eslint-disable no-use-before-define */
 /* eslint-disable import/no-cycle */
-import { createNewItem } from './utils';
-import { saveState } from './stateManager';
+import { createNewItem } from "./utils";
+import { saveState } from "./stateManager";
 
 export function addTask(column) {
-  const lists = column.querySelectorAll('.list');
-  const btn = column.querySelector('.add__btn');
-  const addBtn = column.querySelector('.add__item-btn');
-  const cancelBtn = column.querySelector('.cancel__item-btn');
-  const form = column.querySelector('.form');
-  const textArea = column.querySelector('.textarea');
+  const lists = column.querySelectorAll(".list");
+  const btn = column.querySelector(".add__btn");
+  const addBtn = column.querySelector(".add__item-btn");
+  const cancelBtn = column.querySelector(".cancel__item-btn");
+  const form = column.querySelector(".form");
+  const textArea = column.querySelector(".textarea");
 
-  let value = '';
+  let value = "";
 
-  btn.addEventListener('click', () => {
-    form.style.display = 'block';
-    btn.style.display = 'none';
+  btn.addEventListener("click", () => {
+    form.style.display = "block";
+    btn.style.display = "none";
     textArea.focus();
   });
 
-  cancelBtn.addEventListener('click', () => {
+  cancelBtn.addEventListener("click", () => {
     resetForm();
   });
 
-  addBtn.addEventListener('click', () => {
+  addBtn.addEventListener("click", () => {
     const newItem = createNewItem(value);
     lists[0].appendChild(newItem);
     saveState();
@@ -32,28 +32,30 @@ export function addTask(column) {
   });
 
   function resetForm() {
-    textArea.value = '';
-    value = '';
-    form.style.display = 'none';
-    btn.style.display = 'block';
+    textArea.value = "";
+    value = "";
+    form.style.display = "none";
+    btn.style.display = "block";
   }
 
-  textArea.addEventListener('input', (e) => {
+  textArea.addEventListener("input", (e) => {
     value = e.target.value;
   });
 
-  document.addEventListener('click', (event) => {
+  document.addEventListener("click", (event) => {
     const isClickInsideForm = form.contains(event.target);
     const isClickInsideBtn = btn.contains(event.target);
     const isClickInsideTextArea = textArea.contains(event.target);
     const isClickInsideAddBtn = addBtn.contains(event.target);
     const isClickInsideCancelBtn = cancelBtn.contains(event.target);
 
-    if (!isClickInsideForm
-        && !isClickInsideBtn
-        && !isClickInsideTextArea
-        && !isClickInsideAddBtn
-        && !isClickInsideCancelBtn) {
+    if (
+      !isClickInsideForm &&
+      !isClickInsideBtn &&
+      !isClickInsideTextArea &&
+      !isClickInsideAddBtn &&
+      !isClickInsideCancelBtn
+    ) {
       resetForm();
     }
   });
@@ -62,20 +64,20 @@ export function addTask(column) {
 }
 
 export function dragNDrop() {
-  const lists = document.querySelectorAll('.list');
-  const listItems = document.querySelectorAll('.list__item');
+  const lists = document.querySelectorAll(".list");
+  const listItems = document.querySelectorAll(".list__item");
 
   listItems.forEach((item) => {
-    item.addEventListener('dragstart', () => {
-      item.classList.add('dragging');
+    item.addEventListener("dragstart", () => {
+      item.classList.add("dragging");
     });
 
-    item.addEventListener('dragend', () => {
-      item.classList.remove('dragging');
+    item.addEventListener("dragend", () => {
+      item.classList.remove("dragging");
     });
 
-    item.addEventListener('click', (e) => {
-      if (e.target.classList.contains('delete__item-btn')) {
+    item.addEventListener("click", (e) => {
+      if (e.target.classList.contains("delete__item-btn")) {
         e.target.parentNode.remove();
         saveState();
       }
@@ -83,9 +85,9 @@ export function dragNDrop() {
   });
 
   lists.forEach((list) => {
-    list.addEventListener('dragover', (e) => {
+    list.addEventListener("dragover", (e) => {
       e.preventDefault();
-      const draggingItem = document.querySelector('.dragging');
+      const draggingItem = document.querySelector(".dragging");
       const afterElement = getDragAfterElement(list, e.clientY);
       if (afterElement === null) {
         list.appendChild(draggingItem);
@@ -98,13 +100,18 @@ export function dragNDrop() {
 }
 
 export function getDragAfterElement(list, y) {
-  const draggableElements = [...list.querySelectorAll('.list__item:not(.dragging)')];
-  return draggableElements.reduce((closest, child) => {
-    const box = child.getBoundingClientRect();
-    const offset = y - box.top - box.height / 2;
-    if (offset < 0 && offset > closest.offset) {
-      return { offset, element: child };
-    }
-    return closest;
-  }, { offset: Number.NEGATIVE_INFINITY }).element;
+  const draggableElements = [
+    ...list.querySelectorAll(".list__item:not(.dragging)"),
+  ];
+  return draggableElements.reduce(
+    (closest, child) => {
+      const box = child.getBoundingClientRect();
+      const offset = y - box.top - box.height / 2;
+      if (offset < 0 && offset > closest.offset) {
+        return { offset, element: child };
+      }
+      return closest;
+    },
+    { offset: Number.NEGATIVE_INFINITY },
+  ).element;
 }
